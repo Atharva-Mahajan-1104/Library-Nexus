@@ -34,8 +34,6 @@ Welcome to **Library-App**, your ultimate online library management system! This
 
 
 
-6. Visit [http://localhost:3000](http://localhost:3000) to view the application.
-
 ## 📂 Project Structure
 
 ```bash
@@ -50,3 +48,10 @@ Library-App/
 │   ├── pom.xml
 │   └── ...
 └── README.md
+
+🤝 Contributing
+I welcome contributions!
+
+
+💬 Contact
+Feel free to reach out via Email or LinkedIn if you have any questions or suggestions.
