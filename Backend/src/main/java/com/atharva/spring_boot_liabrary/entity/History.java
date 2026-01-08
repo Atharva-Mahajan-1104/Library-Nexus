@@ -26,7 +26,7 @@ public class History {
     @Column(name = "id")
     private Long id;
 
-    @Column(name="user_email")
+    @Column(name="users_email")
     private String userEmail;
 
     @Column(name="checkout_date")
