@@ -8,29 +8,49 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.accept.ContentNegotiationStrategy;
 import org.springframework.web.accept.HeaderContentNegotiationStrategy;
 
+// Marks this class as a Spring configuration class
 @Configuration
 public class SecurityConfiguration {
+
+    // Defines the security filter chain for the application
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        //disable cross site reqest fogery
+        // Disable CSRF protection (commonly done for stateless REST APIs)
         http.csrf().disable();
-        //protect endpoints at api/<>/secure
 
-    http.authorizeRequests(configurer->
-            configurer.antMatchers("/api/books/secure/**","/api/reviews/secure/**",
-                    "/api/messages/secure/**","/api/admin/secure/**").authenticated()).oauth2ResourceServer().jwt();
+        /*
+         * Secure all endpoints under /api/**/secure/**
+         * Only authenticated users with valid JWT tokens can access these routes
+         */
+        http.authorizeRequests(configurer ->
+                configurer.antMatchers(
+                        "/api/books/secure/**",
+                        "/api/reviews/secure/**",
+                        "/api/messages/secure/**",
+                        "/api/admin/secure/**"
+                ).authenticated()
+        )
+        // Configure the application as an OAuth2 Resource Server using JWT
+        .oauth2ResourceServer()
+        .jwt();
 
-        //add cors endpoints
+        // Enable CORS support for cross-origin requests
         http.cors();
 
-        //add content negotiation statergy
+        /*
+         * Configure content negotiation strategy
+         * Uses request headers (Accept) to determine response format
+         */
+        http.setSharedObject(
+                ContentNegotiationStrategy.class,
+                new HeaderContentNegotiationStrategy()
+        );
 
-        http.setSharedObject(ContentNegotiationStrategy.class,new HeaderContentNegotiationStrategy());
-
-
+        // Customize the 401 Unauthorized response body for Okta
         Okta.configureResourceServer401ResponseBody(http);
 
-        return  http.build();
+        // Build and return the configured security filter chain
+        return http.build();
     }
 }
